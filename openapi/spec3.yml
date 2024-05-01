@@ -1,0 +1,446 @@
+openapi: 3.1.0
+
+info:
+  title: ROOMZ's Public API
+  version: '2024-05-01'
+  contact:
+    email: info@roomz.io
+    name: ROOMZ SA
+    url: 'https://roomz.io'
+  description: ROOMZ's Public API. Please see README for more details.
+  termsOfService: 'https://roomz.io/terms.pdf'
+
+paths:
+  /v1/buildings:
+    get:
+      summary: Get the list of buildings.
+      tags:
+        - Spaces
+      security:
+        - BasicAuth: []
+      parameters:
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - in: query
+          name: length
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BuildingsViewModel"
+              example:
+                Buildings:
+                  - Id: "1a8a832e-0a6b-4a33-8427-61fffb89f6d1"
+                    Name: "Building A"
+                  - Id: "4ec93c76-68e3-4c4d-b451-908d15cd61b4"
+                    Name: "Building B"
+  
+  /v1/buildings/{id}:
+    get:
+      summary: Get the details of a building.
+      tags:
+        - Spaces
+      security:
+        - BasicAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BuildingViewModel"
+              example:
+                Id: "1a8a832e-0a6b-4a33-8427-61fffb89f6d1"
+                Name: "Building A"
+  
+  /v1/buildings/{id}/floors:
+    get:
+      summary: Get the list of floors for a building.
+      tags:
+        - Spaces
+      security:
+        - BasicAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - in: query
+          name: length
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FloorsViewModel"
+              example:
+                Floors:
+                  - Id: "9e1636c9-3a28-4c2f-92b2-d86c6d0c9a09"
+                    Name: "Floor 1"
+                    Level: 1
+                    BuildingId: "1a8a832e-0a6b-4a33-8427-61fffb89f6d1"
+                  - Id: "2f8f4d76-eeb0-42b3-b304-d7a7c30328d7"
+                    Name: "Floor 2"
+                    Level: 2
+                    BuildingId: "1a8a832e-0a6b-4a33-8427-61fffb89f6d1"
+  
+  /v1/floors/{id}:
+    get:
+      summary: Get the details of a floor.
+      tags:
+        - Spaces
+      security:
+        - BasicAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FloorViewModel"
+              example:
+                Id: "9e1636c9-3a28-4c2f-92b2-d86c6d0c9a09"
+                Name: "Floor 1"
+                Level: 1
+  
+  /v1/floors/{id}/workspaces:
+    get:
+      summary: Get the list of workspaces for a floor.
+      tags:
+        - Spaces
+      security:
+        - BasicAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - in: query
+          name: length
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkspacesViewModel"
+              example:
+                Workspaces:
+                  - Id: "3f19b2ee-f9b0-4a0c-94af-f3c721ccf2a7"
+                    Name: "Room 101"
+                    Type: "Room"
+                    Status: "Free"
+                  - Id: "dcf93a62-b144-4c15-b94c-8a53e6f41b4c"
+                    Name: "Desk 1"
+                    Type: "Desk"
+                    Status: "Used"
+                  - Id: "2c314ecc-68e9-439b-b5b5-1cf68a05d7af"
+                    Name: "Huddle Space A"
+                    Type: "Huddle"
+                    Status: "None"
+                  - Id: "d87a63f8-7b17-4782-9b15-d0d542b5252b"
+                    Name: "Parking Space 1"
+                    Type: "ParkingSpace"
+                    Status: "Free"
+  
+  /v1/workspaces/{id}:
+    get:
+      summary: Get the details of a workspace.
+      tags:
+        - Spaces
+      security:
+        - BasicAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkspaceViewModel"
+              example:
+                Id: "3f19b2ee-f9b0-4a0c-94af-f3c721ccf2a7"
+                Name: "Room 101"
+                Type: "Room"
+                Status: "Busy"
+  
+  /v1/workspaces/{id}/status:
+    get:
+      summary: Get the current status of a workspace.
+      description: This endpoint efficiently retrieves the current status of a workspace. It's recommended to get the updated workspace status after receiving a workspace.status.updated event.
+      tags:
+        - Spaces
+      security:
+        - BasicAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkspaceStatusViewModel"
+              example:
+                - Status: "Busy"
+
+webhooks:
+  "{Webhook URL}":
+    post:
+      summary: Receive ROOMZ events in your webhook endpoint.
+      parameters:
+        - in: header
+          name: X-Roomz-Signature
+          description: Hash signature that must be used to ensure that the event is from ROOMZ.
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WebhookEvent"
+      responses:
+        "200":
+          description: OK
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+
+  schemas:
+    BuildingsViewModel:
+      type: object
+      required:
+        - buildings
+      properties:
+        buildings:
+          type: array
+          items:
+            $ref: "#/components/schemas/BuildingViewModel"
+
+    
+    BuildingViewModel:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    
+    FloorsViewModel:
+      type: object
+      required:
+        - floors
+      properties:
+        floors:
+          type: array
+          items:
+            $ref: "#/components/schemas/FloorViewModel"
+    
+    FloorViewModel:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        level:
+          type: integer
+    
+    WorkspacesViewModel:
+      type: object
+      required:
+        - workspaces
+      properties:
+        workspaces:
+          type: array
+          items:
+            $ref: "#/components/schemas/WorkspaceViewModel"
+    
+    WorkspaceViewModel:
+      type: object
+      required:
+        - id
+        - name
+        - type
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        type:
+          $ref: "#/components/schemas/WorkspaceType"
+        status:
+          $ref: "#/components/schemas/WorkspaceStatus"
+    
+    WorkspaceStatusViewModel:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          $ref: "#/components/schemas/WorkspaceStatus"
+
+    WorkspaceStatus:
+      type: string
+      enum:
+        - None
+        - Undefined
+        - Free
+        - Busy
+        - Used
+      description: |
+        - Free: The workspace is free.
+        - Busy: The workspace is busy.
+        - Used: The workspace is warm. The used value is linked to the reservation status value configured in the workspace option set.
+        - None: The workspace has no status, likely to have no sensor and no booking system resource.
+        - Undefined: The workspace status is undefined, likely due to a sensor or booking system resource issue.
+
+    WorkspaceType:
+      type: string
+      enum:
+        - Room
+        - Desk
+        - Huddle
+        - ParkingSpace
+
+    WebhookEvent:
+      description: The WebhookEvent Object do not contain specific information about what has changed for the resource, you will have to make another API call to get the full event details.
+      allOf:
+        - type: object
+          required:
+            - id
+            - type
+            - timestamp
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: This ID can be used to ensure idempotency of the event.
+            type:
+              type: string
+              description: The type of change that occurred for a resource.
+              enum:
+                - building.created
+                - building.deleted
+                - building.updated
+                - floor.created
+                - floor.deleted
+                - floor.updated
+                - workspace.created
+                - workspace.deleted
+                - workspace.updated
+                - workspace.status.updated
+            timestamp:
+              format: date-time
+              type: string
+        - oneOf:
+            - $ref: "#/components/schemas/BuildingEvent"
+            - $ref: "#/components/schemas/FloorEvent"
+            - $ref: "#/components/schemas/WorkspaceEvent"
+
+    BuildingEvent:
+      required:
+        - buildingId
+      properties:
+        buildingId:
+          type: string
+          format: uuid
+
+    FloorEvent:
+      required:
+        - floorId
+      properties:
+        floorId:
+          type: string
+          format: uuid
+
+    WorkspaceEvent:
+      required:
+        - workspaceId
+      properties:
+        workspaceId:
+          type: string
+          format: uuid
