@@ -1,0 +1,86 @@
+openapi: 3.1.0
+
+info:
+  title: ROOMZ's OpenAPI
+  version: '2024-05-20'
+  contact:
+    email: info@roomz.io
+    name: ROOMZ SA
+    url: 'https://roomz.io'
+  description: ROOMZ's OpenAPI Specification. Please see README for more details.
+  termsOfService: 'https://roomz.io/terms.pdf'
+webhooks:
+  "{Webhook URL}":
+    post:
+      summary: Receive ROOMZ events in your webhook endpoint.
+      parameters:
+        - in: header
+          name: X-Roomz-Signature
+          description: Hash signature that must be used to ensure that the event is from ROOMZ.
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WebhookEvent"
+      responses:
+        "200":
+          description: OK
+
+components:
+  schemas:
+    WebhookEvent:
+      type: object
+      required:
+        - id
+        - type
+        - timestamp
+        - data
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: This ID can be used to ensure idempotency of the event.
+        type:
+          type: string
+          description: The type of change that occurred for a resource.
+          enum:
+            - workspace.presence.changed
+        timestamp:
+          format: date-time
+          type: string
+        apiVersion:
+          format: string
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/WorkspacePresenceChangedEvent"
+      examples:
+        - id: "e6ae112e-2af3-4d72-894b-03435d7afde4"
+          type: "workspace.presence.changed"
+          timestamp: "2024-05-21T08:22:32.452Z"
+          apiVersion: "1.0"
+          data:
+            workspaceId: "e6ae112e-2af3-4d72-894b-03435d7afde4"
+            presenceStatus: "busy"
+          
+    WorkspacePresenceChangedEvent:
+      required:
+        - workspaceId
+        - presences
+      properties:
+        workspaceId:
+          type: string
+          format: uuid
+        presenceStatus:
+          type: string
+          format: object
+          $ref: "#/components/schemas/PresenceStatus"
+    
+    PresenceStatus:
+      type: string
+      enum:
+        - free
+        - busy
+
