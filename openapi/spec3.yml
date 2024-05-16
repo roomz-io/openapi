@@ -251,7 +251,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/WorkspaceStatusViewModel"
               example:
-                - Status: "Busy"
+                bookingSystem: "Free"
+                presence: "Busy"
+                workspace: "Free"
 
 webhooks:
   "{Webhook URL}":
@@ -343,7 +345,7 @@ components:
         - id
         - name
         - type
-        - status
+        - workspaceStatus
       properties:
         id:
           type: string
@@ -352,16 +354,43 @@ components:
           type: string
         type:
           $ref: "#/components/schemas/WorkspaceType"
-        status:
-          $ref: "#/components/schemas/WorkspaceStatus"
+        workspaceStatus:
+          $ref: "#/components/schemas/WorkspaceStatusViewModel"
     
     WorkspaceStatusViewModel:
       type: object
       required:
-        - status
+        - bookingSystem
+        - presence
+        - workspace
       properties:
-        status:
+        bookingSystem:
+          $ref: "#/components/schemas/FreeBusyStatus"
+          description: |
+            Status of the booking system resource linked to the workspace. 
+            The status will be none if no resource is linked to the workspace.
+        presence:
+          $ref: "#/components/schemas/FreeBusyStatus"
+          description: |
+            Aggregated presence status from all the sensors of the workspace.
+            The status will be none if no sensors are linked to the workspace.
+        workspace:
           $ref: "#/components/schemas/WorkspaceStatus"
+          description: |
+            Aggregated status from presence and booking system of the workspace.
+            The status will be none if neither sensors nor resources are linked to the workspace.
+      example:
+        bookingSystem: "Free"
+        presence: "Busy"
+        workspace: "Free"
+
+    FreeBusyStatus:
+      type: string
+      enum:
+        - None
+        - Undefined
+        - Free
+        - Busy
 
     WorkspaceStatus:
       type: string
@@ -377,6 +406,9 @@ components:
         - Used: The workspace is warm. The used value is linked to the reservation status value configured in the workspace option set.
         - None: The workspace has no status, likely to have no sensor and no booking system resource.
         - Undefined: The workspace status is undefined, likely due to a sensor or booking system resource issue.
+
+        
+
 
     WorkspaceType:
       type: string
