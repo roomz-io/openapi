@@ -15,7 +15,7 @@ webhooks:
       summary: Receive ROOMZ events in your webhook endpoint.
       parameters:
         - in: header
-          name: X-Roomz-Signature
+          name: Roomz-Signature
           description: Hash signature that must be used to ensure that the event is from ROOMZ.
           schema:
             type: string

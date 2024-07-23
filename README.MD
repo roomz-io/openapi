@@ -31,9 +31,11 @@ You should ensure that your receiving url uses an HTTPS connection.
 
 Your webhook secret will be used to generate a hash signature that is sent to your application with the event in order to ensure that it is from ROOMZ.
 
-The hash signature is included as the value of the `X-Roomz-Signature` header.
+The hash signature is included as the value of the `Roomz-Signature` header.
 
 The hash signature is generated using your webhook secret and the event payload.
+
+For more information on how to verify the signature, see the [signature verification](documentation/signature.md) documentation.
 
 ### Respond fast
 Your integration should respond with a  ``2xx`` status code response as fast as possible.
