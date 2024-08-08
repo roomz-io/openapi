@@ -81,6 +81,6 @@ components:
     PresenceStatus:
       type: string
       enum:
-        - free
-        - busy
+        - Free
+        - Busy
 
