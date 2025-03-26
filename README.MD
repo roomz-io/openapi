@@ -43,7 +43,7 @@ Any other status codes are considered a delivery failure.
 
 You might want to process the event asynchronously. Your integration can respond when it receives the webhook, and then process the payload in the background.
 
->Requests aren't time limited at the moment, but time-to-live is subject to change in the future.
+>Requests currently time out after 30 seconds, but this limit is subject to change in the future.
 
 ### Handle duplicate events
 Your webhook url might sometimes receive the same event multiple times. 
